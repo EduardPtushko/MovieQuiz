@@ -2,9 +2,13 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
 
-    @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private var textLabel: UILabel!
-    @IBOutlet private var counterLabel: UILabel!
+    // MARK: - IBOutlets
+
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var textLabel: UILabel!
+    @IBOutlet private weak var counterLabel: UILabel!
+
+    // MARK: - Properties
 
     // массив вопросов
     private let questions: [QuizQuestion] = [
@@ -63,8 +67,11 @@ final class MovieQuizViewController: UIViewController {
     private var currentQuestionIndex = 0
     // переменная со счётчиком правильных ответов, начальное значение закономерно 0
     private var correctAnswers = 0
+    // переменная определяет доступность кнопки для взаимодействия с пользователем
+    private var isEnabled = true
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -74,25 +81,23 @@ final class MovieQuizViewController: UIViewController {
         show(quiz: viewModel)
     }
 
+    // MARK: - Actions
+
     // метод вызывается, когда пользователь нажимает на кнопку "Да"
     @IBAction private func yesButtonTapped(_ sender: UIButton) {
-        let currentQuestion = questions[currentQuestionIndex]
-        let givenAnswer = true
-
-        showAnswerResult(
-            isCorrect: currentQuestion.correctAnswer == givenAnswer
-        )
+        if isEnabled {
+            checkAnswer(true)
+        }
     }
 
     // метод вызывается, когда пользователь нажимает на кнопку "Нет"
     @IBAction private func noButtonTapped(_ sender: UIButton) {
-        let currentQuestion = questions[currentQuestionIndex]
-        let givenAnswer = false
-
-        showAnswerResult(
-            isCorrect: currentQuestion.correctAnswer == givenAnswer
-        )
+        if isEnabled {
+            checkAnswer(false)
+        }
     }
+
+    // MARK: - Mapping
 
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -102,6 +107,18 @@ final class MovieQuizViewController: UIViewController {
             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)"
         )
     }
+
+    // MARK: - Checking Answer
+
+    private func checkAnswer(_ givenAnswer: Bool) {
+        let currentQuestion = questions[currentQuestionIndex]
+
+        showAnswerResult(
+            isCorrect: currentQuestion.correctAnswer == givenAnswer
+        )
+    }
+
+    // MARK: - Presentation
 
     // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
     private func show(quiz step: QuizStepViewModel) {
@@ -137,6 +154,8 @@ final class MovieQuizViewController: UIViewController {
         self.present(alert, animated: true)
     }
 
+    // MARK: - Quiz Flow
+
     // приватный метод, который меняет цвет рамки
     // принимает на вход булевое значение и ничего не возвращает
     private func showAnswerResult(isCorrect: Bool) {
@@ -147,11 +166,13 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor =
-            isCorrect ? UIColor.green.cgColor : UIColor.red.cgColor
+            isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         imageView.layer.cornerRadius = 20
+        isEnabled = false
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
+            self.isEnabled = true
         }
     }
 
@@ -175,35 +196,5 @@ final class MovieQuizViewController: UIViewController {
 
             show(quiz: viewModel)
         }
-    }
-
-    struct QuizQuestion {
-        // строка с названием фильма,
-        // совпадает с названием картинки афиши фильма в Assets
-        let image: String
-        // строка с вопросом о рейтинге фильма
-        let text: String
-        // булевое значение (true, false), правильный ответ на вопрос
-        let correctAnswer: Bool
-    }
-
-    // вью модель для состояния "Вопрос показан"
-    struct QuizStepViewModel {
-        // картинка с афишей фильма с типом UIImage
-        let image: UIImage
-        // вопрос о рейтинге квиза
-        let question: String
-        // строка с порядковым номером этого вопроса (ex. "1/10")
-        let questionNumber: String
-    }
-
-    // для состояния "Результат квиза"
-    struct QuizResultsViewModel {
-        // строка с заголовком алерта
-        let title: String
-        // строка с текстом о количестве набранных очков
-        let text: String
-        // текст для кнопки алерта
-        let buttonText: String
     }
 }
