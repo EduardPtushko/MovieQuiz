@@ -7,6 +7,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Properties
 
@@ -54,10 +55,13 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Setup
 
     private func setupQuestionFactory() {
-        let questionFactory = QuestionFactory()
-        questionFactory.delegate = self
-        self.questionFactory = questionFactory
-        self.questionFactory?.requestNextQuestion()
+        questionFactory = QuestionFactory(
+            moviesLoader: MoviesLoader(),
+            delegate: self
+        )
+
+        showLoadingIndicator()
+        questionFactory?.loadData()
     }
 
     private func setupImageView() {
@@ -70,8 +74,9 @@ final class MovieQuizViewController: UIViewController {
 
     // метод конвертации вопроса во вьюмодель
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
+
         QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
@@ -158,16 +163,53 @@ final class MovieQuizViewController: UIViewController {
         }
     }
 
+    // перезапуск игры
     private func restartGame() {
         self.currentQuestionIndex = 0
         self.correctAnswers = 0
         self.questionFactory?.requestNextQuestion()
+    }
+
+    // показывает индикатор загрузки
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+    }
+
+    // скрывает индикатор загрузки
+    private func hideLoadingIndicator() {
+        activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
+    }
+
+    // Показывает ошибку сети в виде алерта
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+
+        let model = AlertModel(
+            title: "Ошибка",
+            message: message,
+            buttonText: "Попробовать еще раз"
+        ) { [weak self] in
+            guard let self else { return }
+
+            self.restartGame()
+        }
+        alertPresenter.show(in: self, model: model)
     }
 }
 
 // MARK: - QuestionFactoryDelegate
 
 extension MovieQuizViewController: QuestionFactoryDelegate {
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true
+        questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: any Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
 
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question else { return }

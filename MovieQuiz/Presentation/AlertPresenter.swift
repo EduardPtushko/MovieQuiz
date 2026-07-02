@@ -11,7 +11,6 @@ import UIKit
 final class AlertPresenter {
 
     /// Метод для показа результатов раунда квиза
-    /// принимает модель AlertModel и ничего не возвращает
     func show(in vc: UIViewController, model: AlertModel) {
         let alert = UIAlertController(
             title: model.title,

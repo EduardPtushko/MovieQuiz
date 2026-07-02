@@ -114,10 +114,15 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="mjW-eK-JSW">
+                                <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="mjW-eK-JSW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DPp-bK-hME"/>
+                            <constraint firstItem="mjW-eK-JSW" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="MDT-8B-4nK"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="La7-UM-7ht" secondAttribute="bottom" id="UgV-Gu-0F8"/>
                             <constraint firstItem="La7-UM-7ht" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="We9-eI-fot"/>
                             <constraint firstItem="La7-UM-7ht" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="ZAq-U6-ta6"/>
@@ -125,6 +130,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="mjW-eK-JSW" id="0Ff-ZC-JX4"/>
                         <outlet property="counterLabel" destination="9Go-LC-ztI" id="bIM-3L-7qW"/>
                         <outlet property="imageView" destination="NWf-S4-aeS" id="8Gi-Cm-DSg"/>
                         <outlet property="textLabel" destination="nSc-PH-nFj" id="U6v-wN-YEU"/>

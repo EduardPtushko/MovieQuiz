@@ -94,5 +94,4 @@ final class StatisticService: StatisticServiceProtocol {
         case totalCorrectAnswers  // Для общего количества правильных ответов за все игры
         case totalQuestionsAsked  // Для общего количества вопросов, заданных за все игры
     }
-
 }
