@@ -10,6 +10,11 @@ import XCTest
 
 final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
     var isAnswerButtonsEnabled: Bool = false
+    
+    var showLoadingIndicatorCallsCount = 0
+    var hideLoadingIndicatorCallsCount = 0
+    var showNetworkErrorCallsCount = 0
+
 
     func show(quiz step: QuizStepViewModel) {
 
@@ -24,14 +29,14 @@ final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
     }
 
     func showLoadingIndicator() {
-
+        showLoadingIndicatorCallsCount += 1
     }
 
     func hideLoadingIndicator() {
-
+        hideLoadingIndicatorCallsCount += 1
     }
 
     func showNetworkError(message: String) {
-
+        showNetworkErrorCallsCount += 1
     }
 }

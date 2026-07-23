@@ -7,21 +7,27 @@
 
 import Foundation
 
-/// Фабрика вопросов, отвечающая за генерацию и поставку вопросов для квиза.
 final class QuestionFactory: QuestionFactoryProtocol {
-    private var movies: [MostPopularMovie] = []
-    private let moviesLoader: MoviesLoading
 
-    /// Делегат, которому фабрика передает сгенерированные вопросы.
+    // MARK: - Properties
+
+    private var movies: [MostPopularMovie] = []
+    private let moviesLoader: MoviesLoadingProtocol
+
     private weak var delegate: QuestionFactoryDelegate?
 
-    init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate? = nil)
-    {
+    // MARK: - Init
+
+    init(
+        moviesLoader: MoviesLoadingProtocol,
+        delegate: QuestionFactoryDelegate? = nil
+    ) {
         self.moviesLoader = moviesLoader
         self.delegate = delegate
     }
 
-    /// Метод для запроса случайного следующего вопроса из массива доступных
+    // MARK: - Public Methods
+
     func requestNextQuestion() {
         DispatchQueue.global().async { [weak self] in
             guard let self else { return }
@@ -54,7 +60,6 @@ final class QuestionFactory: QuestionFactoryProtocol {
         }
     }
 
-    /// Метод для загрузки фильмов
     func loadData() {
         moviesLoader.loadMovies { [weak self] result in
             DispatchQueue.main.async {

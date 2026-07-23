@@ -6,8 +6,9 @@
 //
 
 import Foundation
+@testable import MovieQuiz
 
-struct StubNetworkClient: NetworkRouting {
+struct StubNetworkClient: NetworkClientProtocol {
 
     enum TestError: Error {
         case test

@@ -7,7 +7,6 @@
 
 import Foundation
 
-/// Модель для отображения алерта.
 struct AlertModel {
     let title: String
     let message: String

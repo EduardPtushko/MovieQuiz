@@ -8,6 +8,7 @@
 import Foundation
 
 final class MovieQuizPresenter {
+
     // MARK: - Properties
 
     private weak var viewController: MovieQuizViewControllerProtocol?
@@ -19,25 +20,15 @@ final class MovieQuizPresenter {
     private var correctAnswers: Int = 0
     private var currentQuestionIndex: Int = 0
 
+    // MARK: - Init
+
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         statisticService = StatisticService()
         setupQuestionFactory()
     }
 
-    // MARK: - Setup
-
-    private func setupQuestionFactory() {
-        questionFactory = QuestionFactory(
-            moviesLoader: MoviesLoader(),
-            delegate: self
-        )
-
-        viewController?.showLoadingIndicator()
-        questionFactory?.loadData()
-    }
-
-    // MARK: - Mapping
+    // MARK: - Public Methods
 
     func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
@@ -46,18 +37,6 @@ final class MovieQuizPresenter {
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
     }
-
-    // MARK: - Checking Answer
-
-    private func checkAnswer(_ givenAnswer: Bool) {
-        guard let currentQuestion else { return }
-
-        showAnswerResult(
-            isCorrect: currentQuestion.correctAnswer == givenAnswer
-        )
-    }
-
-    // MARK: - Quiz Flow
 
     func showNextQuestionOrResults() {
         if isLastQuestion() {
@@ -124,6 +103,26 @@ final class MovieQuizPresenter {
         resetQuestionIndex()
         correctAnswers = 0
         self.questionFactory?.requestNextQuestion()
+    }
+
+    // MARK: - Private Methods
+
+    private func setupQuestionFactory() {
+        questionFactory = QuestionFactory(
+            moviesLoader: MoviesLoader(),
+            delegate: self
+        )
+
+        viewController?.showLoadingIndicator()
+        questionFactory?.loadData()
+    }
+
+    private func checkAnswer(_ givenAnswer: Bool) {
+        guard let currentQuestion else { return }
+
+        showAnswerResult(
+            isCorrect: currentQuestion.correctAnswer == givenAnswer
+        )
     }
 }
 

@@ -7,12 +7,8 @@
 
 import Foundation
 
-/// Модель данных для отображения Результатов игры.
 struct QuizResultsViewModel {
-    /// Строка с заголовком алерта
     let title: String
-    /// Текст о количестве набранных очков
     let text: String
-    /// Текст для кнопки алерта
     let buttonText: String
 }

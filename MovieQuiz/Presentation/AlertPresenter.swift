@@ -7,10 +7,8 @@
 
 import UIKit
 
-/// Класс для отображения системных алертов и уведомлений пользователю.
 final class AlertPresenter {
 
-    /// Метод для показа результатов раунда квиза
     func show(in vc: UIViewController, model: AlertModel) {
         let alert = UIAlertController(
             title: model.title,

@@ -1,8 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController,
-    MovieQuizViewControllerProtocol
-{
+final class MovieQuizViewController: UIViewController {
 
     // MARK: - IBOutlets
 
@@ -13,9 +11,10 @@ final class MovieQuizViewController: UIViewController,
 
     // MARK: - Properties
 
+    var isAnswerButtonsEnabled = true
+
     private var alertPresenter = AlertPresenter()
     private var presenter: MovieQuizPresenter!
-    var isAnswerButtonsEnabled = true
 
     // MARK: - Lifecycle
 
@@ -39,8 +38,11 @@ final class MovieQuizViewController: UIViewController,
             presenter.noButtonTapped()
         }
     }
+}
 
-    // MARK: - Presentation
+// MARK: - MovieQuizViewControllerProtocol
+
+extension MovieQuizViewController: MovieQuizViewControllerProtocol {
 
     func show(quiz step: QuizStepViewModel) {
         imageView.image = UIImage(data: step.image) ?? UIImage()
