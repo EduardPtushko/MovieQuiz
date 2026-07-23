@@ -7,7 +7,6 @@
 
 import Foundation
 
-/// Модель вопроса квиза
 struct QuizQuestion {
     let image: Data
     let text: String

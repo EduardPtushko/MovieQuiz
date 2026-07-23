@@ -7,12 +7,19 @@
 
 import Foundation
 
-/// Отвечает за загрузку данных по URL
-final class NetworkClient {
+protocol NetworkClientProtocol {
+    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void)
+}
+
+final class NetworkClient: NetworkClientProtocol {
+
+    // MARK: - Nested Types
 
     private enum NetworkError: Error {
         case codeError
     }
+
+    // MARK: - Public Methods
 
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)

@@ -7,11 +7,25 @@
 
 import Foundation
 
-/// Сервис для сбора, подсчета и сохранения статистики игровых сессий.
 final class StatisticService: StatisticServiceProtocol {
+
+    // MARK: - Nested Types
+
+    private enum Keys: String {
+        case gamesCount
+        case bestGameCorrect
+        case bestGameTotal
+        case bestGameDate
+        case totalCorrectAnswers
+        case totalQuestionsAsked
+    }
+
+    // MARK: - Dependencies
+
     private let storage: UserDefaults = .standard
 
-    /// Общее количество правильных ответов
+    // MARK: - Private Properties
+
     private var totalCorrectAnswers: Int {
         get {
             storage.integer(forKey: Keys.totalCorrectAnswers.rawValue)
@@ -21,7 +35,6 @@ final class StatisticService: StatisticServiceProtocol {
         }
     }
 
-    /// Общее количество заданных вопросов
     private var totalQuestionsAsked: Int {
         get {
             storage.integer(forKey: Keys.totalQuestionsAsked.rawValue)
@@ -31,7 +44,8 @@ final class StatisticService: StatisticServiceProtocol {
         }
     }
 
-    /// Количество игр
+    // MARK: - Public Properties
+
     var gamesCount: Int {
         get {
             storage.integer(forKey: Keys.gamesCount.rawValue)
@@ -41,7 +55,6 @@ final class StatisticService: StatisticServiceProtocol {
         }
     }
 
-    /// Результаты лучшей игры
     var bestGame: GameResult {
         get {
             let gameResultDate =
@@ -67,13 +80,13 @@ final class StatisticService: StatisticServiceProtocol {
         }
     }
 
-    /// Средняя точность ответов пользователя в процентах.
     var totalAccuracy: Double {
         guard totalQuestionsAsked > 0 else { return 0.0 }
         return (Double(totalCorrectAnswers) / Double(totalQuestionsAsked)) * 100
     }
 
-    /// Метод для сохранения результатов квиза
+    // MARK: - Public Methods
+
     func store(correct count: Int, total amount: Int) {
         totalCorrectAnswers = totalCorrectAnswers + count
         totalQuestionsAsked = totalQuestionsAsked + amount
@@ -84,14 +97,5 @@ final class StatisticService: StatisticServiceProtocol {
             bestGame = gameResult
         }
 
-    }
-
-    private enum Keys: String {
-        case gamesCount  // Для счётчика сыгранных игр
-        case bestGameCorrect  // Для количества правильных ответов в лучшей игре
-        case bestGameTotal  // Для общего количества вопросов в лучшей игре
-        case bestGameDate  // Для даты лучшей игры
-        case totalCorrectAnswers  // Для общего количества правильных ответов за все игры
-        case totalQuestionsAsked  // Для общего количества вопросов, заданных за все игры
     }
 }
